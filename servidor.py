@@ -54,3 +54,5 @@ def prediccion():
 
 if __name__=="__main__":
     servidor.run(port=4000, debug=True)
+
+#añadir lo de la camara
