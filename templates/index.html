@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identificador de Imágenes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+            position: relative;
+        }
+
+        #input_imagen {
+            display: none;
+        }
+
+        .image-label {
+            cursor: pointer;
+            display: block;
+            position: relative;
+        }
+
+        .image-label img {
+            width: 900px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        #image-box {
+            position: absolute;
+            top: 20px;
+            left: 630px;
+            width: 200px;
+            height: 150px;
+            border: 2px solid transparent;
+            display: none;
+        }
+
+        #image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            border: none;
+            background-color: #6a0dad;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #9d00ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form action="/prediccion" method="post" enctype="multipart/form-data">
+            <label for="input_imagen" class="image-label">
+                <img src="/static/fondo.jpg" alt="R2-D2">
+                <div id="image-box">
+                    <img id="uploaded-image" src="" alt="Imagen cargada">
+                </div>
+            </label>
+            <input type="file" id="input_imagen" name="imagen" onchange="previewImage()">
+            <button type="submit">Identificar imagen</button>
+        </form>
+        {% if clase_predicha %}
+            <h3>Veo un: {{ clase_predicha }}</h3>
+        {% endif %}
+    </div>
+
+    <script>
+        function previewImage() {
+            const input = document.getElementById('input_imagen');
+            const imageBox = document.getElementById('image-box');
+            const uploadedImage = document.getElementById('uploaded-image');
+            const file = input.files[0];
+            const reader = new FileReader();
+
+            reader.onloadend = function () {
+                uploadedImage.src = reader.result;
+                imageBox.style.display = 'block';
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                imageBox.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
+
