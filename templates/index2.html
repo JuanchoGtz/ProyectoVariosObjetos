@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identificador de Imágenes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Imagen de fondo */
+        .background-image {
+            width: 900px;
+            display: block;
+        }
+
+        /* Frame de la cámara sobre la imagen */
+        .frame-container {
+            position: absolute;
+            top: 20px;
+            left: 630px;
+            width: 160px; /* Tamaño del frame */
+            height: 120px;
+            border: 2px solid #6a0dad;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 5px;
+        }
+
+        #video-frame {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Predicción debajo del frame */
+        #prediccion {
+            position: absolute;
+            top: 150px;
+            left: 630px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 5px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Imagen de fondo -->
+        <img src="/static/fondo.jpg" alt="Fondo" class="background-image">
+        
+        <!-- Frame de la cámara sobre la imagen -->
+        <div class="frame-container">
+            <img id="video-frame" src="{{ url_for('video_feed') }}" alt="Video en tiempo real">
+        </div>
+
+        <!-- Predicción debajo del frame -->
+        <p id="prediccion">Esperando predicción...</p>
+    </div>
+
+    <script>
+        function actualizarPrediccion() {
+            fetch('/prediccion_reciente')
+            .then(response => response.json())
+            .then(data => {
+                if (data.prediccion_mas_reciente) {
+                    document.getElementById('prediccion').innerText = "Veo un(@): " + data.prediccion_mas_reciente;
+                }
+            })
+            .catch(error => console.error('Error al obtener la predicción:', error));
+        }
+
+        setInterval(actualizarPrediccion, 1000);
+    </script>
+</body>
+</html>
